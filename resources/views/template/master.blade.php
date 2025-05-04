@@ -49,6 +49,7 @@
             paths: {
                 get_jobs: '{{route('fji.get-jobs')}}',
                 get_job: '{{route('fji.get-job')}}',
+                retry_job: '{{route('fji.retry-job')}}',
                 get_connections_filter: '{{route('fji.filters.connections')}}',
                 get_tags_filter: '{{route('fji.filters.tags')}}',
                 get_queues_filter: '{{route('fji.filters.queues')}}',

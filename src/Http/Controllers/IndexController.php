@@ -47,4 +47,19 @@ class IndexController extends Controller
 
         return response()->json($data);
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function retryJob(Request $request)
+    {
+        $data = $this->repository->getJob($request->get('job_id'));
+
+        $data->payload = json_decode($data->payload);
+
+        $data->retry();
+
+        return response()->json($data);
+    }
 }

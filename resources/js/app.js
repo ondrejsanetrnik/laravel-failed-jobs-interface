@@ -67,6 +67,9 @@ const app = new Vue({
         displayJob(jobId) {
             Bus.$emit('getJob', jobId);
         },
+        retryJob(jobId) {
+            Bus.$emit('retryJob', jobId);
+        },
         loadConnectionFilter() {
             let self = this;
 

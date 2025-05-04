@@ -30,7 +30,7 @@
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                <pre>{{job.exception}}</pre>
+                                <pre>{{ job.exception }}</pre>
                             </div>
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                 <div v-html="prettyPrintJob(job.payload.data)"></div>
@@ -38,7 +38,7 @@
 
                             <div class="tab-pane fade" id="status" role="tabpanel" aria-labelledby="stats-tab">
                                 <ul>
-                                    <li>Characters: {{countJobCharacters(job.payload.data)}}</li>
+                                    <li>Characters: {{ countJobCharacters(job.payload.data) }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -57,42 +57,55 @@
 </template>
 
 <script>
-    import phpunserialize from 'phpunserialize'
+import phpunserialize from 'phpunserialize'
 
-    export default {
-        data() {
-            return {
-                job: null
-            }
-        },
-        methods: {
-            getFailedJob(jobId) {
-                let self = this;
-                axios
-                    .get(window.FJI.paths.get_job, {
-                        params: {job_id: jobId}
-                    })
-                    .then(job => {
-                        $('#show-job-modal').modal('show');
-                        self.job = job.data;
-                    });
-            },
-            prettyPrintJob(data) {
-                return '<pre>' + JSON.stringify(data.command ? phpunserialize(data.command) : data, null, 2) + '</pre>';
-            },
-            countJobCharacters(data) {
-                return JSON.stringify(data.command ? phpunserialize(data.command) : data, null, 2).length;
-            },
-            closeModal() {
-                this.job = null;
-                $('#show-job-modal').modal('hide');
-            }
-        },
-        created() {
-            let self = this;
-            Bus.$on('getJob', jobId => {
-                self.getFailedJob(jobId);
-            });
+export default {
+    data() {
+        return {
+            job: null
         }
+    },
+    methods: {
+        getFailedJob(jobId) {
+            let self = this;
+            axios
+                .get(window.FJI.paths.get_job, {
+                    params: {job_id: jobId}
+                })
+                .then(job => {
+                    $('#show-job-modal').modal('show');
+                    self.job = job.data;
+                });
+        }, retryFailedJob(jobId) {
+            let self = this;
+            axios
+                .get(window.FJI.paths.retry_job, {
+                    params: {job_id: jobId}
+                })
+                .then(job => {
+                    $('#show-job-modal').modal('show');
+                    self.job = job.data;
+                });
+        },
+        prettyPrintJob(data) {
+            return '<pre>' + JSON.stringify(data.command ? phpunserialize(data.command) : data, null, 2) + '</pre>';
+        },
+        countJobCharacters(data) {
+            return JSON.stringify(data.command ? phpunserialize(data.command) : data, null, 2).length;
+        },
+        closeModal() {
+            this.job = null;
+            $('#show-job-modal').modal('hide');
+        }
+    },
+    created() {
+        let self = this;
+        Bus.$on('getJob', jobId => {
+            self.getFailedJob(jobId);
+        });
+        Bus.$on('retryJob', jobId => {
+            self.retryFailedJob(jobId);
+        });
     }
+}
 </script>

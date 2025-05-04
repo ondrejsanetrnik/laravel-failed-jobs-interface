@@ -81,6 +81,7 @@ class FailedJobInterfaceServiceProvider extends ServiceProvider
             $router->get('/', 'IndexController@index');
             $router->get('get-jobs', 'IndexController@getJobs')->name('fji.get-jobs');
             $router->get('get-job', 'IndexController@getJob')->name('fji.get-job');
+            $router->get('retry-job', 'IndexController@retryJob')->name('fji.retry-job');
         });
     }
 }

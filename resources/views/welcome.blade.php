@@ -88,6 +88,7 @@
 
                     <td>
                         <button class="btn btn-info btn-outline-info btn-sm" @click="displayJob(job.id)">Info</button>
+                        <button class="btn btn-success btn-outline-success btn-sm" @click="retryJob(job.id)">Retry</button>
                     </td>
                 </tr>
                 </tbody>
